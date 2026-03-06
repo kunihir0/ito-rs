@@ -44,6 +44,13 @@ pub struct Subtitle {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Season {
+    pub key: String,
+    pub title: String,
+    pub is_current: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Video {
     pub url: String,
     pub quality: String,
@@ -65,6 +72,7 @@ pub struct Anime {
     pub content_rating: ContentRating,
     pub nsfw: i32,
     pub episodes: Option<Vec<Episode>>,
+    pub seasons: Option<Vec<Season>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
