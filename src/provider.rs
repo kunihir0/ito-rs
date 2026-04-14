@@ -171,7 +171,7 @@ macro_rules! export_manga_plugin {
         #[unsafe(no_mangle)]
         pub extern "C" fn get_manga_list(listing_ptr: i32, listing_len: i32, page: i32) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) };
+                if listing_ptr == 0 || listing_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) } };
             let listing: $crate::models::Listing = $crate::postcard::from_bytes(slice).unwrap();
             match <$type as $crate::provider::MangaProvider>::get_manga_list(listing, page) {
                 Ok(res) => {
@@ -197,11 +197,11 @@ macro_rules! export_manga_plugin {
             filters_len: i32,
         ) -> i64 {
             let q_slice =
-                unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) };
+                if query_ptr == 0 || query_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) } };
             let query = String::from_utf8_lossy(q_slice).into_owned();
 
             let f_slice =
-                unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) };
+                if filters_ptr == 0 || filters_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) } };
             let filters: Vec<$crate::models::FilterItem> = if filters_len == 0 {
                 Vec::new()
             } else {
@@ -231,7 +231,7 @@ macro_rules! export_manga_plugin {
             needs_chapters: i32,
         ) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(manga_ptr as *const u8, manga_len as usize) };
+                if manga_ptr == 0 || manga_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(manga_ptr as *const u8, manga_len as usize) } };
 
             let manga: $crate::models::manga::Manga = match $crate::postcard::from_bytes(slice) {
                 Ok(m) => m,
@@ -268,11 +268,11 @@ macro_rules! export_manga_plugin {
             chapter_len: i32,
         ) -> i64 {
             let m_slice =
-                unsafe { core::slice::from_raw_parts(manga_ptr as *const u8, manga_len as usize) };
+                if manga_ptr == 0 || manga_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(manga_ptr as *const u8, manga_len as usize) } };
             let manga: $crate::models::manga::Manga = $crate::postcard::from_bytes(m_slice).unwrap();
 
             let c_slice =
-                unsafe { core::slice::from_raw_parts(chapter_ptr as *const u8, chapter_len as usize) };
+                if chapter_ptr == 0 || chapter_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(chapter_ptr as *const u8, chapter_len as usize) } };
             let chapter: $crate::models::manga::Chapter = $crate::postcard::from_bytes(c_slice).unwrap();
 
             match <$type as $crate::provider::MangaProvider>::get_page_list(manga, chapter) {
@@ -361,7 +361,7 @@ macro_rules! export_novel_plugin {
         #[unsafe(no_mangle)]
         pub extern "C" fn get_novel_list(listing_ptr: i32, listing_len: i32, page: i32) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) };
+                if listing_ptr == 0 || listing_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) } };
             let listing: $crate::models::Listing = $crate::postcard::from_bytes(slice).unwrap();
             match <$type as $crate::provider::NovelProvider>::get_novel_list(listing, page) {
                 Ok(res) => {
@@ -387,11 +387,11 @@ macro_rules! export_novel_plugin {
             filters_len: i32,
         ) -> i64 {
             let q_slice =
-                unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) };
+                if query_ptr == 0 || query_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) } };
             let query = String::from_utf8_lossy(q_slice).into_owned();
 
             let f_slice =
-                unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) };
+                if filters_ptr == 0 || filters_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) } };
             let filters: Vec<$crate::models::FilterItem> = if filters_len == 0 {
                 Vec::new()
             } else {
@@ -421,7 +421,7 @@ macro_rules! export_novel_plugin {
             needs_chapters: i32,
         ) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(novel_ptr as *const u8, novel_len as usize) };
+                if novel_ptr == 0 || novel_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(novel_ptr as *const u8, novel_len as usize) } };
 
             let novel: $crate::models::novel::Novel = match $crate::postcard::from_bytes(slice) {
                 Ok(n) => n,
@@ -458,11 +458,11 @@ macro_rules! export_novel_plugin {
             chapter_len: i32,
         ) -> i64 {
             let n_slice =
-                unsafe { core::slice::from_raw_parts(novel_ptr as *const u8, novel_len as usize) };
+                if novel_ptr == 0 || novel_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(novel_ptr as *const u8, novel_len as usize) } };
             let novel: $crate::models::novel::Novel = $crate::postcard::from_bytes(n_slice).unwrap();
 
             let c_slice =
-                unsafe { core::slice::from_raw_parts(chapter_ptr as *const u8, chapter_len as usize) };
+                if chapter_ptr == 0 || chapter_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(chapter_ptr as *const u8, chapter_len as usize) } };
             let chapter: $crate::models::novel::Chapter = $crate::postcard::from_bytes(c_slice).unwrap();
 
             match <$type as $crate::provider::NovelProvider>::get_chapter_content(novel, chapter) {
@@ -551,7 +551,7 @@ macro_rules! export_anime_plugin {
         #[unsafe(no_mangle)]
         pub extern "C" fn get_anime_list(listing_ptr: i32, listing_len: i32, page: i32) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) };
+                if listing_ptr == 0 || listing_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(listing_ptr as *const u8, listing_len as usize) } };
             let listing: $crate::models::Listing = $crate::postcard::from_bytes(slice).unwrap();
             match <$type as $crate::provider::AnimeProvider>::get_anime_list(listing, page) {
                 Ok(res) => {
@@ -577,11 +577,11 @@ macro_rules! export_anime_plugin {
             filters_len: i32,
         ) -> i64 {
             let q_slice =
-                unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) };
+                if query_ptr == 0 || query_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(query_ptr as *const u8, query_len as usize) } };
             let query = String::from_utf8_lossy(q_slice).into_owned();
 
             let f_slice =
-                unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) };
+                if filters_ptr == 0 || filters_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(filters_ptr as *const u8, filters_len as usize) } };
             let filters: Vec<$crate::models::FilterItem> = if filters_len == 0 {
                 Vec::new()
             } else {
@@ -611,7 +611,7 @@ macro_rules! export_anime_plugin {
             needs_episodes: i32,
         ) -> i64 {
             let slice =
-                unsafe { core::slice::from_raw_parts(anime_ptr as *const u8, anime_len as usize) };
+                if anime_ptr == 0 || anime_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(anime_ptr as *const u8, anime_len as usize) } };
 
             let anime: $crate::models::anime::Anime = match $crate::postcard::from_bytes(slice) {
                 Ok(a) => a,
@@ -648,11 +648,11 @@ macro_rules! export_anime_plugin {
             episode_len: i32,
         ) -> i64 {
             let a_slice =
-                unsafe { core::slice::from_raw_parts(anime_ptr as *const u8, anime_len as usize) };
+                if anime_ptr == 0 || anime_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(anime_ptr as *const u8, anime_len as usize) } };
             let anime: $crate::models::anime::Anime = $crate::postcard::from_bytes(a_slice).unwrap();
 
             let e_slice =
-                unsafe { core::slice::from_raw_parts(episode_ptr as *const u8, episode_len as usize) };
+                if episode_ptr == 0 || episode_len <= 0 { &[] } else { unsafe { core::slice::from_raw_parts(episode_ptr as *const u8, episode_len as usize) } };
             let episode: $crate::models::anime::Episode = $crate::postcard::from_bytes(e_slice).unwrap();
 
             match <$type as $crate::provider::AnimeProvider>::get_video_list(anime, episode) {

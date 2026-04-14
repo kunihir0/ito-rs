@@ -57,6 +57,10 @@ unsafe fn from_packed_ptr<T: DeserializeOwned>(packed: i64) -> Result<T> {
     let ptr = (packed >> 32) as i32;
     let len = (packed & 0xFFFFFFFF) as i32;
     
+    if ptr == 0 || len <= 0 {
+        return postcard::from_bytes(&[]).map_err(Error::Postcard);
+    }
+    
     let slice = unsafe { core::slice::from_raw_parts(ptr as *const u8, len as usize) };
     let res = postcard::from_bytes(slice).map_err(Error::Postcard);
     

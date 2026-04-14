@@ -84,6 +84,14 @@ impl Request {
             ) 
         };
         
+        if len <= 0 {
+            return postcard::from_bytes(&[]).map_err(|e| {
+                let msg = format!("NetResponse FFI Error (len {}): {}", len, e);
+                host::print(&msg);
+                Error::Postcard(e)
+            });
+        }
+        
         let mut response_buf = Vec::<u8>::with_capacity(len as usize);
         let ptr = response_buf.as_mut_ptr();
         
